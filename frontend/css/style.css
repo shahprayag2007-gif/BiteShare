@@ -1,0 +1,397 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    /* "CLASH DISPLAY" PALETTE */
+    --accent-sky: #7BBBFF;       /* Soft Electric Azure / Sky Blue */
+    --dark-midnight: #050F2A;    /* Deep Cosmic Midnight Navy */
+    --bg-ice: #F2FDFF;           /* Ultra-Clean Icy Pure Canvas */
+    --accent-iris: #B8A9FF;      /* Luminous Iris Lavender */
+
+    /* Derived UI Shades */
+    --text-primary: #050F2A;
+    --text-muted: #52637A;
+    --card-bg: #FFFFFF;
+    --border-color: #D3E4F8;
+    --border-hover: #7BBBFF;
+    --input-bg: #F7FCFF;
+    --radius-lg: 20px;
+    --radius-md: 10px;
+    --shadow-xl: 0 24px 50px -10px rgba(5, 15, 42, 0.16), 0 12px 24px -8px rgba(184, 169, 255, 0.18);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: 
+        radial-gradient(at 15% 15%, rgba(184, 169, 255, 0.35) 0px, transparent 55%),
+        radial-gradient(at 85% 85%, rgba(123, 187, 255, 0.38) 0px, transparent 55%),
+        radial-gradient(at 50% 50%, rgba(242, 253, 255, 0.8) 0px, transparent 100%),
+        linear-gradient(135deg, #EBF5FF 0%, #F2FDFF 50%, #EDE9FE 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--text-primary);
+}
+
+.login-wrapper {
+    width: 100%;
+    max-width: 530px;
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    border: 1.5px solid rgba(123, 187, 255, 0.4);
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Header: Deep Midnight (#050F2A) with Clash Display Typography & Glow
+   ========================================================================== */
+.brand-header {
+    background: linear-gradient(145deg, #050F2A 0%, #0C1A3D 65%, #14295C 100%);
+    color: var(--bg-ice);
+    padding: 36px 30px 28px;
+    text-align: center;
+    position: relative;
+    border-bottom: 2px solid rgba(123, 187, 255, 0.25);
+    overflow: hidden;
+}
+
+/* Subtle glowing aura inside the header */
+.brand-header::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 260px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(123, 187, 255, 0.25) 0%, rgba(184, 169, 255, 0.18) 50%, transparent 80%);
+    pointer-events: none;
+}
+
+.brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(184, 169, 255, 0.14);
+    border: 1px solid rgba(184, 169, 255, 0.35);
+    color: var(--accent-iris);
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+    backdrop-filter: blur(8px);
+}
+
+.brand-header h1 {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--bg-ice);
+    letter-spacing: 0.02em;
+}
+
+.brand-header h1 i {
+    color: var(--accent-sky);
+    filter: drop-shadow(0 2px 8px rgba(123, 187, 255, 0.5));
+}
+
+.brand-header p {
+    font-size: 0.92rem;
+    color: #BED6FB;
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   Role Tabs Navigation
+   ========================================================================== */
+.role-tabs {
+    display: flex;
+    background: #F2FDFF;
+    border-bottom: 1.5px solid var(--border-color);
+}
+
+.role-tab {
+    flex: 1;
+    padding: 13px 10px;
+    border: none;
+    background: transparent;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.role-tab.active {
+    color: var(--dark-midnight);
+    background: #FFFFFF;
+    border-bottom: 3px solid var(--accent-sky);
+    font-weight: 700;
+}
+
+.role-tab.active i {
+    color: var(--accent-sky);
+}
+
+.role-tab:hover:not(.active) {
+    background: #EAF3FF;
+    color: var(--dark-midnight);
+}
+
+/* ==========================================================================
+   Form Body & Controls
+   ========================================================================== */
+.login-body {
+    padding: 30px;
+    background: #FFFFFF;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 480px) {
+    .form-row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+.field-hint {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.86rem;
+    font-weight: 600;
+    margin-bottom: 7px;
+    color: var(--dark-midnight);
+}
+
+.form-group label i {
+    color: var(--accent-sky);
+    margin-right: 4px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.94rem;
+    color: var(--dark-midnight);
+    background: var(--input-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-sky);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3.5px rgba(123, 187, 255, 0.28);
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23050F2A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.password-input-group {
+    position: relative;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    padding: 4px;
+    transition: color 0.15s;
+}
+
+.password-toggle-btn:hover {
+    color: var(--accent-sky);
+}
+
+.form-helper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    font-size: 0.83rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: #2F69CC;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-link:hover {
+    color: var(--dark-midnight);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Primary Action Button: Deep Midnight Navy with Sky Cyan Glow
+   ========================================================================== */
+.btn-primary {
+    width: 100%;
+    padding: 13px 18px;
+    background: linear-gradient(135deg, #050F2A 0%, #0F204C 100%);
+    color: #F2FDFF;
+    border: 1px solid rgba(123, 187, 255, 0.35);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 18px rgba(5, 15, 42, 0.28);
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+}
+
+.btn-primary i {
+    color: var(--accent-sky);
+    transition: transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0A1B46 0%, #17306E 100%);
+    border-color: var(--accent-sky);
+    transform: translateY(-1.5px);
+    box-shadow: 0 8px 24px rgba(123, 187, 255, 0.35);
+}
+
+.btn-primary:hover i {
+    transform: translateX(3px);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(5, 15, 42, 0.2);
+}
+
+.btn-primary:disabled {
+    background: #90A0B8;
+    border-color: transparent;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Switch Mode Prompt (New User / Sign In) */
+.switch-mode-prompt {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    padding: 11px 14px;
+    background: var(--input-bg);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border-color);
+}
+
+.switch-mode-prompt a {
+    color: #2F69CC;
+    text-decoration: underline;
+    font-weight: 700;
+    margin-left: 4px;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.switch-mode-prompt a:hover {
+    color: var(--dark-midnight);
+}
+
+/* Alert Boxes */
+.alert-box {
+    display: none;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.86rem;
+    margin-bottom: 18px;
+    line-height: 1.45;
+}
+
+.alert-box.error {
+    display: block;
+    background: #FFF1F2;
+    color: #BE123C;
+    border: 1px solid #FECDD3;
+}
+
+.alert-box.success {
+    display: block;
+    background: #EDF7FF;
+    color: var(--dark-midnight);
+    border: 1.5px solid #BAE0FD;
+    font-weight: 600;
+}
+
+/* Footer */
+.brand-footer {
+    text-align: center;
+    padding: 16px;
+    background: #F8FCFF;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}

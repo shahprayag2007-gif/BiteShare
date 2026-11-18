@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Operations & Food Rescue Hub | BiteShare</title>
+    <link rel="stylesheet" href="css/ngo-dashboard.css">
+    <link rel="stylesheet" href="css/analytics.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF & AutoTable for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="ngo-dashboard.html" class="nav-brand">
+                <i class="fa-solid fa-hand-holding-heart"></i>
+                <span>BiteShare <small style="font-size:0.75rem; color:#7BBBFF; font-weight:normal;">| NGO Partner Hub</small></span>
+            </a>
+
+            <div class="nav-actions">
+                <!-- Notifications Trigger Button -->
+                <button class="notif-bell-btn" onclick="toggleNotifDrawer()" title="View surplus food alerts">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notif-badge" id="notifBadge">0</span>
+                </button>
+
+                <!-- NGO User Details Badge -->
+                <div class="user-badge">
+                    <div class="user-avatar" id="avatarInitial">N</div>
+                    <div class="user-details">
+                        <span class="user-name" id="ngoNameDisplay">Robin Hood Army</span>
+                        <span class="user-city" id="ngoCityDisplay">📍 Ahmedabad</span>
+                    </div>
+                </div>
+
+                <button class="btn-logout" onclick="switchNgoTab('analytics')" title="View NGO Rescue Impact &amp; Environmental Analytics">
+                    <i class="fa-solid fa-chart-line"></i> Analytics
+                </button>
+
+                <button class="btn-logout" onclick="logout()" title="Sign out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="ngo-container">
+        <!-- Tab Navigation (All Operations in ONE Dashboard) -->
+        <div class="ngo-tabs">
+            <button class="ngo-tab-btn active" id="tabFeed" onclick="switchNgoTab('feed')">
+                <i class="fa-solid fa-utensils"></i> Available Surplus Food
+            </button>
+            <button class="ngo-tab-btn" id="tabPending" onclick="switchNgoTab('pending')">
+                <i class="fa-solid fa-clock"></i> Pending Pickups (<span id="pendingCountBadge">0</span>)
+            </button>
+            <button class="ngo-tab-btn" id="tabCompleted" onclick="switchNgoTab('completed')">
+                <i class="fa-solid fa-circle-check"></i> Completed Rescues (<span id="completedCountBadge">0</span>)
+            </button>
+            <button class="ngo-tab-btn" id="tabAnalytics" onclick="switchNgoTab('analytics')">
+                <i class="fa-solid fa-chart-pie"></i> Impact &amp; Analytics
+            </button>
+        </div>
+
+        <!-- Filter Bar (For Feed View) -->
+        <div class="filter-bar" id="filterBar">
+            <div class="filter-group">
+                <label for="campusFilter"><i class="fa-solid fa-building-columns"></i> Filter by Campus:</label>
+                <select id="campusFilter" class="filter-select" onchange="filterListings()">
+                    <option value="all" selected>All Campuses (Ahmedabad Citywide)</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="categoryFilter"><i class="fa-solid fa-tags"></i> Category:</label>
+                <select id="categoryFilter" class="filter-select" onchange="filterListings()">
+                    <option value="all">All Categories</option>
+                    <option value="cooked_meal">Cooked Meals</option>
+                    <option value="packed_food">Packed / Sealed</option>
+                    <option value="bakery_snacks">Bakery / Snacks</option>
+                </select>
+            </div>
+
+            <div style="margin-left: auto; font-size: 0.82rem; color: #64748b;">
+                <span id="activeCountDisplay">0 items available</span>
+            </div>
+        </div>
+
+        <!-- Section 1: Available Food Feed -->
+        <section id="sectionFeed">
+            <div id="cardsGrid" class="cards-grid">
+                <!-- Dynamically loaded via ngo-dashboard.js -->
+                <div style="text-align:center; padding:40px; color:#94a3b8; grid-column:1/-1;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size:2rem; margin-bottom:10px;"></i>
+                    <p>Loading available food listings...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Pending Pickups (Accepted, Awaiting Collection) -->
+        <section id="sectionPending" style="display: none;">
+            <div class="section-subbar">
+                <div>
+                    <h3><i class="fa-solid fa-truck-ramp-box" style="color:#C27803;"></i> Accepted Food &bull; Pending Pickups</h3>
+                    <p style="font-size:0.8rem; color:#64748B; margin-top:2px;">Dispatched volunteer shipments awaiting collection and transport.</p>
+                </div>
+                <button class="btn-pdf" onclick="downloadManifestPdf('pending')">
+                    <i class="fa-solid fa-file-pdf"></i> Download Pending Manifest (PDF)
+                </button>
+            </div>
+
+            <div id="pendingGrid" class="cards-grid">
+                <!-- Dynamically loaded via ngo-dashboard.js -->
+            </div>
+        </section>
+
+        <!-- Section 3: Completed Rescues (Accepted & Marked as Picked Up) -->
+        <section id="sectionCompleted" style="display: none;">
+            <div class="section-subbar">
+                <div>
+                    <h3><i class="fa-solid fa-circle-check" style="color:#059669;"></i> Successfully Rescued &amp; Delivered Meals</h3>
+                    <p style="font-size:0.8rem; color:#64748B; margin-top:2px;">Official verified rescue ledger of meals delivered to beneficiaries.</p>
+                </div>
+                <button class="btn-pdf" onclick="downloadManifestPdf('completed')">
+                    <i class="fa-solid fa-file-pdf"></i> Download Rescue Report (PDF)
+                </button>
+            </div>
+
+            <div id="completedGrid" class="cards-grid">
+                <!-- Dynamically loaded via ngo-dashboard.js -->
+            </div>
+        </section>
+
+        <!-- Section 4: NGO Impact & Rescue Analytics (All in ONE Dashboard) -->
+        <section id="sectionAnalytics" style="display: none;">
+            <!-- Hero Subbar -->
+            <div class="section-subbar" style="margin-bottom: 20px;">
+                <div>
+                    <h3><i class="fa-solid fa-chart-pie" style="color:var(--accent-sky);"></i> NGO Rescue Impact &amp; Environmental Analytics</h3>
+                    <p style="font-size:0.82rem; color:#64748B; margin-top:2px;">Real-time KPIs, environmental CO₂ emissions averted, and campus contribution breakdown across Ahmedabad.</p>
+                </div>
+                <button class="btn-pdf" onclick="loadAnalyticsTab()">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh Analytics
+                </button>
+            </div>
+
+            <!-- Metrics Cards -->
+            <div class="metrics-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:24px;">
+                <div class="metric-card green" style="background:#FFFFFF; border:1.5px solid #D3E4F8; border-radius:12px; padding:20px; box-shadow:0 2px 4px rgba(5,15,42,0.06); border-left:5px solid #059669;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:0.85rem; font-weight:600; color:#475569;">Meals Rescued by NGO</span>
+                        <i class="fa-solid fa-bowl-food" style="color:#059669; font-size:1.2rem;"></i>
+                    </div>
+                    <div style="font-size:1.8rem; font-weight:700; color:#050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif;" id="valRescuedServings">0</div>
+                    <div style="font-size:0.78rem; color:#64748B; margin-top:4px;" id="valWasteKg">Calculating waste diverted...</div>
+                </div>
+
+                <div class="metric-card blue" style="background:#FFFFFF; border:1.5px solid #D3E4F8; border-radius:12px; padding:20px; box-shadow:0 2px 4px rgba(5,15,42,0.06); border-left:5px solid #0284C7;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:0.85rem; font-weight:600; color:#475569;">Campus Donors Connected</span>
+                        <i class="fa-solid fa-building-columns" style="color:#0284C7; font-size:1.2rem;"></i>
+                    </div>
+                    <div style="font-size:1.8rem; font-weight:700; color:#050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif;" id="valActiveCampuses">0</div>
+                    <div style="font-size:0.78rem; color:#64748B; margin-top:4px;">Citywide higher education campuses</div>
+                </div>
+
+                <div class="metric-card orange" style="background:#FFFFFF; border:1.5px solid #D3E4F8; border-radius:12px; padding:20px; box-shadow:0 2px 4px rgba(5,15,42,0.06); border-left:5px solid #D97706;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:0.85rem; font-weight:600; color:#475569;">Total Listings Monitored</span>
+                        <i class="fa-solid fa-receipt" style="color:#D97706; font-size:1.2rem;"></i>
+                    </div>
+                    <div style="font-size:1.8rem; font-weight:700; color:#050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif;" id="valTotalListings">0</div>
+                    <div style="font-size:0.78rem; color:#64748B; margin-top:4px;" id="valActivePortions">0 active portions currently available</div>
+                </div>
+
+                <div class="metric-card purple" style="background:#FFFFFF; border:1.5px solid #D3E4F8; border-radius:12px; padding:20px; box-shadow:0 2px 4px rgba(5,15,42,0.06); border-left:5px solid #7C3AED;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span style="font-size:0.85rem; font-weight:600; color:#475569;">CO₂ Emissions Averted</span>
+                        <i class="fa-solid fa-leaf" style="color:#7C3AED; font-size:1.2rem;"></i>
+                    </div>
+                    <div style="font-size:1.8rem; font-weight:700; color:#050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif;" id="valCo2Kg">0 kg</div>
+                    <div style="font-size:0.78rem; color:#64748B; margin-top:4px;">Prevented landfill methane release</div>
+                </div>
+            </div>
+
+            <!-- Two-Column Layout: Leaderboard & Charts -->
+            <div class="analytics-layout" style="display:grid; grid-template-columns:1.2fr 1fr; gap:20px;">
+                <!-- Left: Campus Food Rescue Contribution Table -->
+                <div class="panel-card" style="background:#FFFFFF; border:1.5px solid #D3E4F8; border-radius:12px; padding:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <h3 style="font-size:1.05rem; font-weight:700; color:#050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif;">
+                            <i class="fa-solid fa-ranking-star" style="color:#D97706;"></i> Campus Rescue Leaderboard
+                        </h3>
+                        <span style="font-size:0.78rem; background:#EAF3FF; color:#050F2A; padding:3px 8px; border-radius:6px; font-weight:600;">
+                            Ahmedabad Campuses
+                        </span>
+                    </div>
+
+                    <div style="overflow-x:auto;">
+                        <table class="leaderboard-table" style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                            <thead>
+                                <tr style="border-bottom:2px solid #E2DBD0; text-align:left; color:#6E7564;">
+                                    <th style="padding:10px 8px;">Rank</th>
+                                    <th style="padding:10px 8px;">Campus</th>
+                                    <th style="padding:10px 8px;">Listings</th>
+                                    <th style="padding:10px 8px;">Rescued</th>
+                                    <th style="padding:10px 8px;">Rescue Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">
+                                        <i class="fa-solid fa-spinner fa-spin"></i> Querying university rankings...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: Surplus Food Composition Charts -->
+                <div class="panel-card" style="background:#FFFFFF; border:1.5px solid #D3E4F8; border-radius:12px; padding:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <h3 style="font-size:1.05rem; font-weight:700; color:#050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif;">
+                            <i class="fa-solid fa-chart-pie" style="color:#7BBBFF;"></i> Food Surplus Composition
+                        </h3>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:20px;">
+                        <div style="height:200px; position:relative;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                        <div style="height:200px; position:relative;">
+                            <canvas id="sourceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Claim Food Modal Popup -->
+    <div class="modal-overlay" id="claimModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-truck-fast"></i> Claim Food for Pickup</h3>
+                <button type="button" class="modal-close" onclick="closeClaimModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div id="claimFoodSummary" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px; font-size:0.85rem;">
+                    <!-- Filled dynamically -->
+                </div>
+
+                <div id="claimErrorAlert" style="display:none; margin-bottom:14px; padding:10px 14px; background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; border-radius:8px; font-size:0.85rem; font-weight:600;"></div>
+
+                <form id="claimForm" onsubmit="submitClaim(event)">
+                    <input type="hidden" id="claimListingId">
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display:block; font-size:0.82rem; font-weight:600; margin-bottom:5px;">
+                            <i class="fa-solid fa-user"></i> Volunteer Name
+                        </label>
+                        <input type="text" id="volunteerName" class="filter-select" style="width:100%;" placeholder="e.g., Ajay Deshmukh" required>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display:block; font-size:0.82rem; font-weight:600; margin-bottom:5px;">
+                            <i class="fa-solid fa-phone"></i> Volunteer Phone
+                        </label>
+                        <input type="tel" id="volunteerPhone" class="filter-select" style="width:100%;" placeholder="e.g., +91 9876543210" required>
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display:block; font-size:0.82rem; font-weight:600; margin-bottom:5px;">
+                            <i class="fa-solid fa-clock"></i> Expected Pickup Arrival Time
+                        </label>
+                        <input type="datetime-local" id="expectedPickupTime" class="filter-select" style="width:100%;" required>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display:block; font-size:0.82rem; font-weight:600; margin-bottom:5px;">
+                            <i class="fa-solid fa-note-sticky"></i> Pickup Notes
+                        </label>
+                        <input type="text" id="claimNotes" class="filter-select" style="width:100%;" placeholder="e.g., Coming with 2 insulated hot crates in an electric van">
+                    </div>
+
+                    <button type="submit" id="btnConfirmClaim" class="btn-claim">
+                        <i class="fa-solid fa-circle-check"></i> Confirm Claim & Dispatch Volunteer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Food Listing Claim / Acceptance Confirmation Dialog Box -->
+    <div class="modal-overlay" id="claimSuccessModal">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header" style="background:#2A4736;">
+                <h3><i class="fa-solid fa-circle-check" style="color:#A7F3D0;"></i> Food Rescue Confirmed!</h3>
+                <button type="button" class="modal-close" onclick="closeClaimSuccessModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 24px;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin: 0 auto 16px; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.15);">
+                    <i class="fa-solid fa-handshake-angle"></i>
+                </div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #050F2A; font-family:'Clash Display','Plus Jakarta Sans',sans-serif; margin-bottom: 6px;">Listing Successfully Claimed</h3>
+                <p style="font-size: 0.88rem; color: #475569; margin-bottom: 18px; line-height: 1.45;">
+                    The food batch has been reserved in PostgreSQL under your NGO. A notification has been dispatched to the donor.
+                </p>
+
+                <div id="confirmedClaimDetails" style="background: #F8FCFF; border: 1.5px solid #D3E4F8; border-radius: 10px; padding: 14px; text-align: left; margin-bottom: 20px; font-size: 0.85rem; color: #050F2A; display: flex; flex-direction: column; gap: 6px;">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button type="button" class="btn-primary" style="flex: 1; padding: 11px;" onclick="goToPendingFromConfirmation()">
+                        <i class="fa-solid fa-truck-ramp-box"></i> View in Active Pickups
+                    </button>
+                    <button type="button" class="filter-select" style="padding: 11px 16px; cursor: pointer; font-weight: 600;" onclick="closeClaimSuccessModal()">
+                        Stay on Feed
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Cancel Claim Dialog Box -->
+    <div class="modal-overlay" id="cancelClaimModal">
+        <div class="modal-content" style="max-width: 460px;">
+            <div class="modal-header" style="background: linear-gradient(145deg, #050F2A 0%, #0E1F4B 100%);">
+                <h3><i class="fa-solid fa-triangle-exclamation" style="color: #F87171;"></i> Cancel Food Claim?</h3>
+                <button type="button" class="modal-close" onclick="closeCancelClaimModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <p style="font-size: 0.9rem; color: #475569; line-height: 1.5; margin-bottom: 16px;">
+                    Are you sure you want to cancel this claim? The food listing will immediately be returned back to the available surplus feed for other NGOs to rescue.
+                </p>
+                <div id="cancelClaimError" style="display:none; margin-bottom:14px; padding:10px 14px; background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; border-radius:6px; font-size:0.85rem;"></div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="filter-select" style="padding: 9px 18px; cursor: pointer; font-weight: 600;" onclick="closeCancelClaimModal()">
+                        Keep Claim
+                    </button>
+                    <button type="button" id="btnConfirmCancelClaim" class="btn-primary" style="background: #E11D48; border-color: #E11D48; padding: 9px 18px;" onclick="executeCancelClaim()">
+                        <i class="fa-solid fa-trash-can"></i> Yes, Cancel Claim
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Mark Collected Dialog Box -->
+    <div class="modal-overlay" id="markCollectedModal">
+        <div class="modal-content" style="max-width: 460px;">
+            <div class="modal-header" style="background: linear-gradient(145deg, #050F2A 0%, #0E1F4B 100%);">
+                <h3><i class="fa-solid fa-box-archive" style="color: #7BBBFF;"></i> Confirm Food Pickup</h3>
+                <button type="button" class="modal-close" onclick="closeMarkCollectedModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <p style="font-size: 0.9rem; color: #475569; line-height: 1.5; margin-bottom: 16px;">
+                    Confirm that your volunteer has successfully collected this food shipment from campus? The database status will be updated to <strong>collected</strong> and logged for impact analytics.
+                </p>
+                <div id="markCollectedError" style="display:none; margin-bottom:14px; padding:10px 14px; background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; border-radius:6px; font-size:0.85rem;"></div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="filter-select" style="padding: 9px 18px; cursor: pointer; font-weight: 600;" onclick="closeMarkCollectedModal()">
+                        Not Yet
+                    </button>
+                    <button type="button" id="btnConfirmCollected" class="btn-primary" style="padding: 9px 18px;" onclick="executeMarkCollected()">
+                        <i class="fa-solid fa-check-double"></i> Yes, Confirm Pickup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Decline Listing Dialog Box -->
+    <div class="modal-overlay" id="declineConfirmModal">
+        <div class="modal-content" style="max-width: 460px;">
+            <div class="modal-header" style="background: linear-gradient(145deg, #050F2A 0%, #0E1F4B 100%);">
+                <h3><i class="fa-solid fa-ban" style="color: #F87171;"></i> Decline Food Listing?</h3>
+                <button type="button" class="modal-close" onclick="closeDeclineModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 24px;">
+                <p style="font-size: 0.9rem; color: #475569; line-height: 1.5; margin-bottom: 14px;">
+                    Are you sure you want to decline this surplus food offer? It will be removed from your feed and will no longer show up in your portal.
+                </p>
+                <div id="declineItemPreview" style="background:#F8FCFF; border:1.5px solid #D3E4F8; border-radius:8px; padding:12px; margin-bottom:18px;">
+                    <div id="declineItemTitle" style="font-weight:700; color:#050F2A; font-size:0.92rem;">Food Item</div>
+                    <div id="declineItemSub" style="font-size:0.78rem; color:#64748B; margin-top:3px;">Details</div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="filter-select" style="padding: 9px 18px; cursor: pointer; font-weight: 600;" onclick="closeDeclineModal()">
+                        Keep on Feed
+                    </button>
+                    <button type="button" id="btnConfirmDecline" class="btn-primary" style="background: #E11D48; border-color: #E11D48; padding: 9px 18px;" onclick="executeDeclineListing()">
+                        <i class="fa-solid fa-ban"></i> Yes, Decline
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide-out Notifications Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleNotifDrawer()"></div>
+    <aside class="notif-drawer" id="notifDrawer">
+        <div class="drawer-header">
+            <h3><i class="fa-solid fa-bell" style="color:#7BBBFF;"></i> Surplus Food Alerts</h3>
+            <button class="btn-logout" onclick="toggleNotifDrawer()" style="padding:4px 8px;">&times; Close</button>
+        </div>
+        <div class="drawer-body" id="drawerContent">
+            <!-- Populated via ngo-dashboard.js -->
+        </div>
+    </aside>
+
+    <script src="js/ngo-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiteShare | Campus Food Redistribution & Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <!-- Brand Header -->
+        <header class="brand-header">
+            <div class="brand-badge">
+                <i class="fa-solid fa-seedling"></i> Zero Waste Campus Initiative
+            </div>
+            <h1>
+                <i class="fa-solid fa-bowl-food"></i> BiteShare
+            </h1>
+            <p>Inter-University Surplus Food Redistribution & NGO Connect</p>
+        </header>
+
+        <!-- Role Selector Tabs -->
+        <nav class="role-tabs" aria-label="Portal Role">
+            <button type="button" class="role-tab active" id="tabStudent" onclick="switchRole('student')">
+                <i class="fa-solid fa-graduation-cap"></i> Student / Donor
+            </button>
+            <button type="button" class="role-tab" id="tabStaff" onclick="switchRole('canteen_staff')">
+                <i class="fa-solid fa-utensils"></i> Canteen Staff
+            </button>
+            <button type="button" class="role-tab" id="tabNgo" onclick="switchRole('ngo')">
+                <i class="fa-solid fa-hand-holding-heart"></i> NGO Partner
+            </button>
+        </nav>
+
+        <!-- Form Body -->
+        <main class="login-body">
+            <!-- Alert message banner -->
+            <div id="alertBox" class="alert-box" role="alert"></div>
+
+            <!-- ========================================================= -->
+            <!-- 1. SIGN IN FORM                                           -->
+            <!-- ========================================================= -->
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <!-- University Selection (Required for Students and Canteen Staff) -->
+                <div class="form-group" id="universityGroup">
+                    <label for="universitySelect">
+                        <i class="fa-solid fa-building-columns"></i> Select Your University <small style="font-weight:normal; color:#64748b;">(Optional if using college email)</small>
+                    </label>
+                    <select id="universitySelect" class="form-control">
+                        <option value="" selected>-- Auto-detect campus from email / ID --</option>
+                        <!-- Dynamically populated from PostgreSQL / API -->
+                    </select>
+                </div>
+
+                <!-- User ID or Email -->
+                <div class="form-group">
+                    <label for="identifierInput" id="identifierLabel">
+                        <i class="fa-solid fa-id-card"></i> Student ID or College Email
+                    </label>
+                    <input 
+                        type="text" 
+                        id="identifierInput" 
+                        class="form-control" 
+                        placeholder="e.g., aarav.sharma@nit.edu or NIT2024CS042" 
+                        required 
+                        autocomplete="username"
+                    >
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="passwordInput">
+                        <i class="fa-solid fa-lock"></i> Password
+                    </label>
+                    <div class="password-input-group">
+                        <input 
+                            type="password" 
+                            id="passwordInput" 
+                            class="form-control" 
+                            placeholder="Enter your account password" 
+                            required 
+                            autocomplete="current-password"
+                        >
+                        <button 
+                            type="button" 
+                            class="password-toggle-btn" 
+                            onclick="togglePasswordVisibility('passwordInput', 'eyeIconLogin')" 
+                            aria-label="Toggle password visibility"
+                        >
+                            <i class="fa-regular fa-eye" id="eyeIconLogin"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Form Helpers -->
+                <div class="form-helper">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe"> Remember this campus
+                    </label>
+                    <a href="#" class="forgot-link" onclick="alert('Please contact your campus administrator or NGO coordinator to reset your password.')">Forgot password?</a>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="btn-primary">
+                    <span id="btnText">Sign In to Campus Food Portal</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <p class="switch-mode-prompt">
+                    New user? <a href="javascript:void(0)" onclick="setAuthMode('register')">Create new account</a>
+                </p>
+            </form>
+
+            <!-- ========================================================= -->
+            <!-- 2. NEW USER REGISTRATION FORM                             -->
+            <!-- ========================================================= -->
+            <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+                <!-- University Selection (Shown for Students and Canteen Staff) -->
+                <div class="form-group" id="regUniversityGroup">
+                    <label for="regUniversitySelect">
+                        <i class="fa-solid fa-building-columns"></i> Select Your Campus / University <span style="color:#e53e3e">*</span>
+                    </label>
+                    <select id="regUniversitySelect" class="form-control" required>
+                        <option value="" disabled selected>-- Choose your university --</option>
+                    </select>
+                </div>
+
+                <!-- Student & Canteen Fields -->
+                <div id="regCampusFields">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="regFullName">
+                                <i class="fa-solid fa-user"></i> Full Name <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="text" id="regFullName" class="form-control" placeholder="e.g. Aditi Sharma" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regPhone">
+                                <i class="fa-solid fa-phone"></i> Phone Number <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="tel" id="regPhone" class="form-control" placeholder="+91 98765 43210" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="regEmail">
+                                <i class="fa-solid fa-envelope"></i> Official / College Email <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="email" id="regEmail" class="form-control" placeholder="aditi.s@nit.edu" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regCampusId" id="regCampusIdLabel">
+                                <i class="fa-solid fa-id-card"></i> Student Roll No / ID
+                            </label>
+                            <input type="text" id="regCampusId" class="form-control" placeholder="NIT2025CS110">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NGO Specific Fields -->
+                <div id="regNgoFields" style="display: none;">
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="regNgoName">
+                                <i class="fa-solid fa-hand-holding-heart"></i> NGO / Trust Name <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="text" id="regNgoName" class="form-control" placeholder="e.g. Akshaya Food Relief">
+                        </div>
+                        <div class="form-group">
+                            <label for="regNgoRegNo">
+                                <i class="fa-solid fa-certificate"></i> Darpan / Govt Reg. No. <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="text" id="regNgoRegNo" class="form-control" placeholder="NGO-KA-2024-8890">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="regNgoContact">
+                                <i class="fa-solid fa-user-tie"></i> Contact Person / Lead <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="text" id="regNgoContact" class="form-control" placeholder="e.g. Rajesh Kumar">
+                        </div>
+                        <div class="form-group">
+                            <label for="regNgoPhone">
+                                <i class="fa-solid fa-phone"></i> NGO Helpline Phone <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="tel" id="regNgoPhone" class="form-control" placeholder="+91 98888 12345">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="regNgoEmail">
+                                <i class="fa-solid fa-envelope"></i> Official NGO Email <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="email" id="regNgoEmail" class="form-control" placeholder="contact@akshayarelief.org">
+                        </div>
+                        <div class="form-group">
+                            <label for="regNgoCity">
+                                <i class="fa-solid fa-city"></i> Operating City (Active Zone)
+                            </label>
+                            <input type="text" id="regNgoCity" class="form-control" value="Ahmedabad" readonly style="background:#EAF3FF; color:#050F2A; font-weight:600;">
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="regNgoState">
+                                <i class="fa-solid fa-map"></i> State <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="text" id="regNgoState" class="form-control" placeholder="Karnataka" value="Karnataka">
+                        </div>
+                        <div class="form-group">
+                            <label for="regNgoPincode">
+                                <i class="fa-solid fa-location-dot"></i> Pincode <span style="color:#e53e3e">*</span>
+                            </label>
+                            <input type="text" id="regNgoPincode" class="form-control" placeholder="380054" value="380054">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regNgoAddress">
+                            <i class="fa-solid fa-location-crosshairs"></i> Center / Pickup Dispatch Address
+                        </label>
+                        <input type="text" id="regNgoAddress" class="form-control" placeholder="SG Highway Distribution Hub, Bodakdev">
+                    </div>
+                </div>
+
+                <!-- Passwords (Common for All Roles in Registration) -->
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="regPassword">
+                            <i class="fa-solid fa-lock"></i> Set Password <span style="color:#e53e3e">*</span>
+                        </label>
+                        <div class="password-input-group">
+                            <input type="password" id="regPassword" class="form-control" placeholder="Min. 6 chars" required minlength="4">
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword', 'eyeIconReg1')">
+                                <i class="fa-regular fa-eye" id="eyeIconReg1"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="regConfirmPassword">
+                            <i class="fa-solid fa-shield-halved"></i> Confirm Password <span style="color:#e53e3e">*</span>
+                        </label>
+                        <div class="password-input-group">
+                            <input type="password" id="regConfirmPassword" class="form-control" placeholder="Re-enter password" required minlength="4">
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regConfirmPassword', 'eyeIconReg2')">
+                                <i class="fa-regular fa-eye" id="eyeIconReg2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button for Registration -->
+                <button type="submit" id="regSubmitBtn" class="btn-primary">
+                    <span id="regBtnText">Create Student Account & Enter Portal</span>
+                    <i class="fa-solid fa-user-check"></i>
+                </button>
+
+                <p class="switch-mode-prompt">
+                    Already have an account? <a href="javascript:void(0)" onclick="setAuthMode('login')">Sign in here</a>
+                </p>
+            </form>
+        </main>
+
+        <!-- Footer -->
+        <footer class="brand-footer">
+            Multi-University Food Waste Rescue
+        </footer>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

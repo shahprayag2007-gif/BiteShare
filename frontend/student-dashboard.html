@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Food Donor Portal | BiteShare</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="student-dashboard.html" class="nav-brand">
+                <i class="fa-solid fa-bowl-food"></i>
+                <span>BiteShare <small style="font-size:0.75rem; color:#7BBBFF; font-weight:normal;">| Campus Donor</small></span>
+            </a>
+
+            <div class="nav-user-panel">
+                <div class="user-badge">
+                    <div class="user-avatar" id="avatarInitial">S</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userNameDisplay">Student Donor</span>
+                        <span class="user-univ" id="userUnivDisplay">Campus Name</span>
+                    </div>
+                </div>
+
+                <button class="btn-logout" onclick="logout()" title="Sign out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="dashboard-container">
+        <!-- Impact Metric Cards -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fa-solid fa-utensils"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="statTotalServings">0</h3>
+                    <p>Total Servings Donated</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="statActiveListings">0</h3>
+                    <p>Active Listings Waiting</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="statRescuedServings">0</h3>
+                    <p>Meals Rescued by NGOs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Column Layout: Entry Form + Live Listings -->
+        <div class="dashboard-layout">
+            <!-- Column 1: Food Entry Form -->
+            <section class="form-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fa-solid fa-plus-circle" style="color: var(--primary);"></i>
+                        List Leftover Food
+                    </h2>
+                    <p class="card-subtitle">
+                        Every portion counts. Post leftover tiffin or mess meals before they spoil.
+                    </p>
+                </div>
+
+                <div id="formAlert" style="display:none; padding:10px 14px; border-radius:6px; margin-bottom:14px; font-size:0.85rem;"></div>
+
+                <form id="foodEntryForm" onsubmit="submitFoodListing(event)">
+                    <!-- Food Title -->
+                    <div class="form-group">
+                        <label for="foodTitle">
+                            <i class="fa-solid fa-bowl-rice"></i> Dish Name / Title
+                        </label>
+                        <input 
+                            type="text" 
+                            id="foodTitle" 
+                            class="form-control" 
+                            placeholder="e.g., Veg Fried Rice with Paneer Curry" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Category & Servings -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="foodCategory">
+                                <i class="fa-solid fa-tags"></i> Category
+                            </label>
+                            <select id="foodCategory" class="form-control" required>
+                                <option value="cooked_meal" selected>Cooked Meal</option>
+                                <option value="packed_food">Packed / Sealed Food</option>
+                                <option value="bakery_snacks">Bakery / Snacks</option>
+                                <option value="fruits_vegetables">Fruits / Veggies</option>
+                                <option value="beverages">Beverages / Milk</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantityServings" id="quantityLabel">
+                                <i class="fa-solid fa-users"></i> Quantity (Servings / People)
+                            </label>
+                            <input 
+                                type="number" 
+                                id="quantityServings" 
+                                class="form-control" 
+                                min="1" 
+                                max="1000" 
+                                value="4" 
+                                placeholder="e.g., 4 people"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Prepared Time & Expiry Time -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="preparedTime">
+                                <i class="fa-regular fa-clock"></i> Prepared At
+                            </label>
+                            <input 
+                                type="datetime-local" 
+                                id="preparedTime" 
+                                class="form-control" 
+                                oninput="onPreparedTimeChange()" 
+                                onchange="onPreparedTimeChange()" 
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expiryTime">
+                                <i class="fa-solid fa-hourglass-end"></i> Consume Before (Expiry) <small style="font-weight:normal; color:var(--text-muted); font-size:0.75rem;">(Default: +6 hrs)</small>
+                            </label>
+                            <input 
+                                type="datetime-local" 
+                                id="expiryTime" 
+                                class="form-control" 
+                                required
+                            >
+                            <div class="preset-buttons">
+                                <button type="button" class="btn-preset" onclick="setExpiryHours(2)">+2 Hours</button>
+                                <button type="button" class="btn-preset" onclick="setExpiryHours(4)">+4 Hours</button>
+                                <button type="button" class="btn-preset" onclick="setExpiryHours(6)">+6 Hours (Default)</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hygiene Notes / Description -->
+                    <div class="form-group">
+                        <label for="description">
+                            <i class="fa-solid fa-circle-info"></i> Packaging & Hygiene Notes
+                        </label>
+                        <textarea 
+                            id="description" 
+                            class="form-control" 
+                            rows="2" 
+                            placeholder="e.g., Packed in sterile steel boxes, kept covered, pure vegetarian"
+                        ></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="btnSubmitListing" class="btn-submit">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>List Food & Notify Local NGOs</span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Column 2: Live Listings Feed -->
+            <section class="feed-card">
+                <div class="feed-header">
+                    <div>
+                        <h2 class="card-title">
+                            <i class="fa-solid fa-list-check" style="color: var(--primary);"></i>
+                            Your Food Listings &amp; Status
+                        </h2>
+                        <p class="card-subtitle">Real-time status updates as nearby NGOs claim your food</p>
+                    </div>
+
+                    <button class="refresh-btn" onclick="loadMyListings()">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                </div>
+
+                <!-- Listings Container -->
+                <div id="listingsContainer" class="listings-grid">
+                    <!-- Populated dynamically via student-dashboard.js -->
+                    <div class="empty-state">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <p>Loading your food listings...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Custom Confirmation Modal Dialog Box for Cancelling Food Listings -->
+    <div id="cancelConfirmModal" class="dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="dialogTitle">
+        <div class="dialog-box" onclick="event.stopPropagation()">
+            <div class="dialog-header">
+                <div class="dialog-icon-wrap">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="dialog-title-wrap">
+                    <h3 id="dialogTitle">Cancel Food Listing?</h3>
+                    <p id="dialogSub">Are you sure you want to cancel this food listing? It will be removed from the available pool and nearby NGOs will no longer be able to rescue it.</p>
+                </div>
+            </div>
+
+            <div class="dialog-body">
+                <div class="dialog-item-preview" id="dialogItemPreview">
+                    <div class="dialog-item-title" id="dialogItemTitle">Food Item</div>
+                    <div class="dialog-item-sub">
+                        <span id="dialogItemQuantity"><i class="fa-solid fa-users"></i> 4 servings</span>
+                        <span id="dialogItemLocation"><i class="fa-solid fa-location-dot"></i> Campus</span>
+                    </div>
+                </div>
+                <div id="dialogErrorMsg" style="display:none; margin-top:12px; padding:10px 14px; background:#FEE2E2; color:#991B1B; border:1px solid #FECACA; border-radius:6px; font-size:0.85rem;"></div>
+            </div>
+
+            <div class="dialog-actions">
+                <button type="button" class="dialog-btn dialog-btn-cancel" onclick="closeCancelDialog()">
+                    Keep Listing
+                </button>
+                <button type="button" id="dialogConfirmBtn" class="dialog-btn dialog-btn-danger" onclick="executeCancelListing()">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>Yes, Cancel Listing</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/student-dashboard.js"></script>
+</body>
+</html>
