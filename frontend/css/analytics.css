@@ -21,6 +21,11 @@
     --shadow-lg: 0 12px 30px -4px rgba(5, 15, 42, 0.16);
 }
 
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -516,4 +521,177 @@ body {
 .eco-stat-item span {
     font-size: 0.78rem;
     color: #E2EEFE;
+}
+
+/* ==========================================================================
+   Mobile & Responsive Adaptations (All Screen Sizes)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 10px 14px;
+    }
+
+    .nav-brand {
+        font-size: 1.15rem;
+        gap: 8px;
+    }
+
+    .nav-brand small {
+        display: none;
+    }
+
+    .nav-links {
+        gap: 6px;
+    }
+
+    .nav-link-btn {
+        padding: 6px 9px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+
+    .analytics-container {
+        padding: 0 12px;
+        margin: 16px auto;
+    }
+
+    .hero-banner {
+        padding: 20px 16px;
+        margin-bottom: 16px;
+        border-radius: var(--radius-md);
+        gap: 12px;
+    }
+
+    .hero-text h1 {
+        font-size: 1.25rem;
+        gap: 8px;
+    }
+
+    .hero-text p {
+        font-size: 0.8rem;
+        line-height: 1.45;
+    }
+
+    .hero-badge {
+        font-size: 0.72rem;
+        padding: 6px 12px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .metric-card {
+        padding: 14px;
+        border-radius: var(--radius-md);
+    }
+
+    .metric-top {
+        margin-bottom: 8px;
+    }
+
+    .metric-label {
+        font-size: 0.68rem;
+    }
+
+    .metric-icon {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        font-size: 0.88rem;
+        border-radius: 8px;
+    }
+
+    .metric-value {
+        font-size: 1.45rem;
+        margin-bottom: 4px;
+    }
+
+    .metric-sub {
+        font-size: 0.7rem;
+    }
+
+    .panel-header {
+        padding: 14px 16px;
+    }
+
+    .panel-title {
+        font-size: 1.05rem;
+    }
+
+    .panel-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .panel-body {
+        padding: 14px;
+    }
+
+    .leaderboard-table th {
+        padding: 10px 8px;
+        font-size: 0.72rem;
+        white-space: nowrap;
+    }
+
+    .leaderboard-table td {
+        padding: 10px 8px;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+
+    .charts-stack {
+        padding: 14px;
+    }
+
+    .chart-box {
+        max-height: 220px;
+    }
+
+    .eco-box {
+        padding: 18px 16px;
+        border-radius: var(--radius-md);
+        margin-top: 18px;
+    }
+
+    .eco-box h3 {
+        font-size: 1.1rem;
+    }
+
+    .eco-box p {
+        font-size: 0.8rem;
+    }
+
+    .eco-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .eco-stat-item {
+        padding: 10px;
+    }
+
+    .eco-stat-item h4 {
+        font-size: 1.25rem;
+    }
+
+    .eco-stat-item span {
+        font-size: 0.72rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-brand span {
+        font-size: 1.1rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .eco-stats {
+        grid-template-columns: 1fr;
+    }
 }

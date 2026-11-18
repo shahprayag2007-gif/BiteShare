@@ -27,6 +27,11 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     min-height: 100vh;
     background: 
@@ -394,4 +399,102 @@ select.form-control {
     border-top: 1px solid var(--border-color);
     font-size: 0.82rem;
     color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Mobile & Responsive Adaptations (All Screen Sizes)
+   ========================================================================== */
+@media (max-width: 480px) {
+    body {
+        padding: 12px 10px;
+        align-items: flex-start;
+    }
+
+    .login-wrapper {
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(5, 15, 42, 0.12);
+    }
+
+    .brand-header {
+        padding: 24px 16px 20px;
+    }
+
+    .brand-header h1 {
+        font-size: 1.5rem;
+        gap: 8px;
+    }
+
+    .brand-header p {
+        font-size: 0.8rem;
+    }
+
+    .brand-badge {
+        font-size: 0.68rem;
+        padding: 4px 10px;
+    }
+
+    .role-tabs {
+        display: flex;
+    }
+
+    .role-tab {
+        padding: 10px 4px;
+        font-size: 0.76rem;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .role-tab i {
+        font-size: 1rem;
+    }
+
+    .login-body {
+        padding: 20px 14px;
+    }
+
+    .form-control {
+        padding: 11px 12px;
+        font-size: 0.9rem;
+    }
+
+    .form-row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .form-row-2 .form-group {
+        margin-bottom: 14px;
+    }
+
+    .form-helper {
+        font-size: 0.78rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .btn-primary {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+
+    .switch-mode-prompt {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .role-tab {
+        font-size: 0.7rem;
+        padding: 8px 2px;
+    }
+
+    .brand-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .login-body {
+        padding: 16px 10px;
+    }
 }
