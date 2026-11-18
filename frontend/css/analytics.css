@@ -1,0 +1,519 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    /* CLASH DISPLAY PALETTE */
+    --brand-primary: #050F2A;     /* Deep Midnight Navy */
+    --brand-dark: #020714;        /* Obsidian Dark */
+    --accent-sky: #7BBBFF;        /* Electric Sky Azure */
+    --accent-iris: #B8A9FF;       /* Iris Lavender */
+    --bg-page: #F2FDFF;           /* Icy Pure Canvas */
+    --card-bg: #FFFFFF;           /* Pure White */
+    --text-primary: #050F2A;      /* Crisp High-Contrast Midnight */
+    --text-secondary: #475569;    /* Slate Gray */
+    --text-muted: #64748B;        /* Muted Slate */
+    --border: #D3E4F8;           /* Soft Sky Border */
+    --radius-lg: 18px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+    --shadow-sm: 0 2px 5px rgba(5, 15, 42, 0.05);
+    --shadow-md: 0 6px 16px -2px rgba(5, 15, 42, 0.08), 0 2px 6px -1px rgba(123, 187, 255, 0.08);
+    --shadow-lg: 0 12px 30px -4px rgba(5, 15, 42, 0.16);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-page);
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(184, 169, 255, 0.16) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(123, 187, 255, 0.18) 0px, transparent 50%);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   Navbar: Midnight Navy with Clash Display Brand
+   ========================================================================== */
+.navbar {
+    background: linear-gradient(145deg, #050F2A 0%, #0C1A3D 65%, #14295C 100%);
+    border-bottom: 2px solid rgba(123, 187, 255, 0.25);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 12px 24px;
+    box-shadow: 0 4px 20px rgba(5, 15, 42, 0.25);
+}
+
+.nav-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #F2FDFF;
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.02em;
+}
+
+.nav-brand i {
+    color: var(--accent-sky);
+    font-size: 1.45rem;
+    filter: drop-shadow(0 2px 6px rgba(123, 187, 255, 0.45));
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-link-btn {
+    text-decoration: none;
+    color: #F2FDFF;
+    background: rgba(242, 253, 255, 0.1);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(123, 187, 255, 0.3);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link-btn:hover {
+    background: #F2FDFF;
+    color: #050F2A;
+    box-shadow: 0 2px 10px rgba(123, 187, 255, 0.25);
+}
+
+.nav-link-btn.primary {
+    background: linear-gradient(135deg, #7BBBFF 0%, #B8A9FF 100%);
+    color: #050F2A;
+    border-color: transparent;
+    font-weight: 700;
+}
+
+.nav-link-btn.primary:hover {
+    background: #FFFFFF;
+    color: #050F2A;
+    box-shadow: 0 4px 14px rgba(123, 187, 255, 0.4);
+}
+
+/* ==========================================================================
+   Hero Section: Ethereal Deep Midnight Card
+   ========================================================================== */
+.hero-banner {
+    background: linear-gradient(145deg, #050F2A 0%, #0E1F4B 65%, #183170 100%);
+    color: #F2FDFF;
+    padding: 38px 30px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-lg);
+    border: 1.5px solid rgba(123, 187, 255, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-banner::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: 20%;
+    width: 280px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(123, 187, 255, 0.25) 0%, rgba(184, 169, 255, 0.2) 60%, transparent 80%);
+    pointer-events: none;
+}
+
+.hero-text h1 {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.95rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #F2FDFF;
+    letter-spacing: 0.01em;
+}
+
+.hero-text h1 i {
+    color: var(--accent-sky);
+    filter: drop-shadow(0 2px 8px rgba(123, 187, 255, 0.5));
+}
+
+.hero-text p {
+    font-size: 0.95rem;
+    color: #BED6FB;
+    max-width: 620px;
+    line-height: 1.5;
+}
+
+.hero-badge {
+    background: rgba(184, 169, 255, 0.15);
+    color: var(--accent-iris);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(184, 169, 255, 0.35);
+    backdrop-filter: blur(8px);
+}
+
+.hero-badge i {
+    color: var(--accent-sky);
+}
+
+/* Container */
+.analytics-container {
+    max-width: 1280px;
+    margin: 28px auto;
+    padding: 0 20px;
+}
+
+/* Metric Cards Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+.metric-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-sky);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+.metric-card.green::before { background: #059669; }
+.metric-card.blue::before { background: var(--accent-sky); }
+.metric-card.orange::before { background: #D97706; }
+.metric-card.purple::before { background: var(--accent-iris); }
+
+.metric-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.metric-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.metric-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.05rem;
+}
+
+.metric-icon.green { background: #ECFDF5; color: #059669; }
+.metric-icon.blue { background: #EBF5FF; color: #0284C7; }
+.metric-icon.orange { background: #FFFBEB; color: #D97706; }
+.metric-icon.purple { background: #F3E8FF; color: #7C3AED; }
+
+.metric-value {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.metric-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* Two Column Layout */
+.analytics-layout {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 992px) {
+    .analytics-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Panel Card */
+.panel-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: box-shadow 0.18s;
+}
+
+.panel-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.panel-header {
+    padding: 20px 24px;
+    border-bottom: 1.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F8FCFF;
+}
+
+.panel-title {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.panel-title i {
+    color: var(--accent-sky);
+}
+
+.panel-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 3px;
+}
+
+.panel-body {
+    padding: 24px;
+}
+
+/* Leaderboard Table */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th {
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    background: #F0F7FF;
+    border-bottom: 1.5px solid var(--border);
+}
+
+.leaderboard-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+    color: var(--text-primary);
+}
+
+.leaderboard-table tr:hover {
+    background: #F8FCFF;
+}
+
+.rank-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+}
+
+.rank-1 { background: #FEF3C7; color: #92400E; border: 1.5px solid #FCD34D; }
+.rank-2 { background: #E2E8F0; color: #334155; border: 1.5px solid #CBD5E1; }
+.rank-3 { background: #FED7AA; color: #7C2D12; border: 1.5px solid #FDBA74; }
+.rank-other { background: #F1F5F9; color: #64748B; }
+
+.campus-name-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.campus-name-cell strong {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.campus-name-cell small {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.progress-bar-wrap {
+    width: 100%;
+    background: #E2EDF9;
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7BBBFF 0%, #B8A9FF 100%);
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Category Breakdown Bars */
+.category-item {
+    margin-bottom: 16px;
+}
+
+.category-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+}
+
+.category-bar-bg {
+    width: 100%;
+    background: #EAF2FC;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.category-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #050F2A 0%, #7BBBFF 100%);
+    border-radius: 999px;
+    transition: width 0.6s ease;
+}
+
+/* Environmental Impact Banner */
+.eco-box {
+    background: linear-gradient(135deg, #050F2A 0%, #0F2350 100%);
+    border: 1.5px solid rgba(123, 187, 255, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    color: #F2FDFF;
+    margin-top: 24px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.eco-box::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(circle, rgba(123, 187, 255, 0.2) 0%, rgba(184, 169, 255, 0.15) 50%, transparent 80%);
+    pointer-events: none;
+}
+
+.eco-box h3 {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #F2FDFF;
+}
+
+.eco-box h3 i {
+    color: var(--accent-sky);
+}
+
+.eco-box p {
+    font-size: 0.88rem;
+    color: #BED6FB;
+    line-height: 1.5;
+}
+
+.eco-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.eco-stat-item {
+    background: rgba(242, 253, 255, 0.08);
+    border: 1px solid rgba(123, 187, 255, 0.25);
+    padding: 14px;
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(6px);
+}
+
+.eco-stat-item h4 {
+    font-family: 'Clash Display', 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #7BBBFF;
+    margin-bottom: 4px;
+}
+
+.eco-stat-item span {
+    font-size: 0.78rem;
+    color: #E2EEFE;
+}

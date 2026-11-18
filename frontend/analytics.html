@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inter-University Impact Analytics | BiteShare DBMS</title>
+    <link rel="stylesheet" href="css/analytics.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="analytics.html" class="nav-brand">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>BiteShare <small style="font-size:0.75rem; color:#7BBBFF; font-weight:normal;">| Impact Analytics</small></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="student-dashboard.html" class="nav-link-btn">
+                    <i class="fa-solid fa-graduation-cap"></i> Student Portal
+                </a>
+                <a href="ngo-dashboard.html" class="nav-link-btn">
+                    <i class="fa-solid fa-hand-holding-heart"></i> NGO Portal
+                </a>
+                <a href="login.html" class="nav-link-btn primary">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="analytics-container">
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+            <div class="hero-text">
+                <h1>
+                    <i class="fa-solid fa-earth-americas"></i> Inter-University Impact & Food Rescue Analytics
+                </h1>
+                <p>
+                    Aggregating live surplus food data across multiple higher education campuses. Powered by MySQL database views, relational triggers, and transactional procedures.
+                </p>
+            </div>
+            <div class="hero-badge">
+                <i class="fa-solid fa-database"></i> Real-Time DBMS Aggregation
+            </div>
+        </section>
+
+        <!-- Metrics Cards -->
+        <section class="metrics-grid">
+            <div class="metric-card green">
+                <div class="metric-top">
+                    <span class="metric-label">Meals Rescued by NGOs</span>
+                    <div class="metric-icon green"><i class="fa-solid fa-bowl-food"></i></div>
+                </div>
+                <div class="metric-value" id="valRescuedServings">0</div>
+                <div class="metric-sub" id="valWasteKg">Calculating waste diverted...</div>
+            </div>
+
+            <div class="metric-card blue">
+                <div class="metric-top">
+                    <span class="metric-label">Participating Campuses</span>
+                    <div class="metric-icon blue"><i class="fa-solid fa-building-columns"></i></div>
+                </div>
+                <div class="metric-value" id="valActiveCampuses">0</div>
+                <div class="metric-sub">Operating citywide across Ahmedabad campuses</div>
+            </div>
+
+            <div class="metric-card orange">
+                <div class="metric-top">
+                    <span class="metric-label">Total Listings Logged</span>
+                    <div class="metric-icon orange"><i class="fa-solid fa-receipt"></i></div>
+                </div>
+                <div class="metric-value" id="valTotalListings">0</div>
+                <div class="metric-sub" id="valActivePortions">0 active portions currently available</div>
+            </div>
+
+            <div class="metric-card purple">
+                <div class="metric-top">
+                    <span class="metric-label">CO₂ Emissions Averted</span>
+                    <div class="metric-icon purple"><i class="fa-solid fa-leaf"></i></div>
+                </div>
+                <div class="metric-value" id="valCo2Kg">0 kg</div>
+                <div class="metric-sub">Prevented organic landfill methane release</div>
+            </div>
+        </section>
+
+        <!-- Two Column Analytical Layout -->
+        <div class="analytics-layout">
+            <!-- Left Column: University Rankings -->
+            <section class="panel-card">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fa-solid fa-ranking-star" style="color: #f59e0b;"></i>
+                        Campus Food Rescue Leaderboard
+                    </h2>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>University Campus</th>
+                                <th>Listings</th>
+                                <th>Meals Rescued</th>
+                                <th>Rescue Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody">
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Querying university rankings...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Right Column: Visual Charts Breakdown -->
+            <section class="panel-card">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fa-solid fa-chart-donut" style="color: #0284c7;"></i>
+                        Food Surplus Composition
+                    </h2>
+                </div>
+
+                <div class="charts-stack">
+                    <div>
+                        <h4 style="font-size: 0.82rem; color: #475569; margin-bottom: 8px; text-transform: uppercase;">
+                            By Food Category
+                        </h4>
+                        <div class="chart-box">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div style="border-top: 1px dashed #e2e8f0; padding-top: 16px;">
+                        <h4 style="font-size: 0.82rem; color: #475569; margin-bottom: 8px; text-transform: uppercase;">
+                            By Donor Source (Student Tiffin vs Canteen)
+                        </h4>
+                        <div class="chart-box">
+                            <canvas id="sourceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/analytics.js"></script>
+</body>
+</html>
