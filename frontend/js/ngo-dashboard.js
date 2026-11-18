@@ -1,7 +1,8 @@
-// Auto-detect API base URL (handles http://127.0.0.1:8000, VS Code Live Server port 5500, and direct file:/// opening)
-const API_BASE = (window.location.port === "8000")
-    ? ""
-    : "http://127.0.0.1:8000";
+// Auto-detect API base URL (uses local server on localhost, and secure live tunnel when hosted on Vercel)
+const LIVE_BACKEND_URL = "https://collecting-writer-epic-indicates.trycloudflare.com";
+const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? (window.location.port === "8000" ? "" : "http://127.0.0.1:8000")
+    : LIVE_BACKEND_URL;
 
 let currentNgo = null;
 let rawListings = [];
